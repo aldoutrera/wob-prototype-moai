@@ -29,8 +29,8 @@ if screenHeight == nil then screenHeight = 720 end
 --screenHeight = 1536
 
 -- htc one x, samsung galaxy s3, 1.777 aspect ratio (16:9)
-screenWidth = 1280
-screenHeight = 720
+--screenWidth = 1280
+--screenHeight = 720
 
 -- other
 --screenWidth = 640
@@ -39,13 +39,35 @@ screenHeight = 720
 -- required for non mobile platforms
 MOAISim.openWindow("W.O.B. Prototype", screenWidth, screenHeight)
 
+-- set world dimensions
+worldWidth = 1280
+worldHeight = 720
+
 viewport = MOAIViewport.new()
 
--- for now viewport size will match the device resolution, but may have to letterbox this to ensure consistent aspect ratio
-viewport:setSize(screenWidth, screenHeight)
+-- viewport size should be the highest resolution that fits within the screen, that also matches the aspect ratio of the world dimensions
+viewportWidth = screenWidth
+viewportHeight = screenHeight
 
--- viewport will show 1280 x 720 world units regardless of device resolution
-viewport:setScale(1280, 720)
+worldAspectRatio = worldWidth / worldHeight
+screenAspectRatio = screenWidth / screenHeight
+
+if screenAspectRatio < worldAspectRatio then
+	-- need to letterbox on top and bottom of viewport
+	viewportHeight = viewportWidth / worldAspectRatio
+	offset = (screenHeight - viewportHeight) / 2
+	viewport:setSize(0, offset, viewportWidth, viewportHeight + offset)
+elseif screenAspectRatio > worldAspectRatio then
+	-- need to letterbox on left and right of viewport
+	viewportWidth = viewportHeight * worldAspectRatio
+	offset = (screenWidth - viewportWidth) / 2
+	viewport:setSize(offset, 0, viewportWidth + offset, viewportHeight)
+else
+	viewport:setSize(viewportWidth, viewportHeight)
+end
+
+-- viewport will show world dimensions regardless of device resolution
+viewport:setScale(worldWidth, worldHeight)
 
 mainMenuLayer = MOAILayer2D.new()
 mainMenuLayer:setViewport(viewport)
@@ -55,8 +77,8 @@ backgroundImage = MOAIGfxQuad2D.new()
 -- MainMenuBackground.png is 2048 x 1152 with a perfect circle in the center (for detecting aspect ratio issues)
 backgroundImage:setTexture("MainMenuBackground.png")
 
--- not sure if this is the best way to do this, stretch the image over the entire screen, probably should be using viewport dimensions instead
-backgroundImage:setRect(-(screenWidth/2), -(screenHeight/2), (screenWidth/2), (screenHeight/2))
+-- stretch the background image to cover the entire world dimensions
+backgroundImage:setRect(-(worldWidth/2), -(worldHeight/2), (worldWidth/2), (worldHeight/2))
 
 backgroundProp = MOAIProp2D.new()
 backgroundProp:setDeck(backgroundImage)
