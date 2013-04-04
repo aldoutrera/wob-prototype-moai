@@ -3,7 +3,7 @@ screenWidth = MOAIEnvironment.horizontalResolution
 screenHeight = MOAIEnvironment.verticalResolution
 
 -- if device in portrait mode, then switch screenWidth and screenHeight
-if screenWidth < screenHeight then
+if screenWidth ~= nil and screenHeight ~= nil and screenWidth < screenHeight then
 	screenWidth = MOAIEnvironment.verticalResolution
 	screenHeight = MOAIEnvironment.horizontalResolution
 end
