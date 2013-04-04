@@ -1,6 +1,12 @@
 -- set screen dimensions dynamically based on device
-screenWidth = MOAIEnvironment.screenWidth
-screenHeight = MOAIEnvironment.screenHeight
+screenWidth = MOAIEnvironment.horizontalResolution
+screenHeight = MOAIEnvironment.verticalResolution
+
+-- if device in portrait mode, then switch screenWidth and screenHeight
+if screenWidth < screenHeight then
+	screenWidth = MOAIEnvironment.verticalResolution
+	screenHeight = MOAIEnvironment.horizontalResolution
+end
 
 -- if host does not provide screen dimensions, use these defaults
 if screenWidth == nil then screenWidth = 1280 end
@@ -35,6 +41,9 @@ if screenHeight == nil then screenHeight = 720 end
 -- other
 --screenWidth = 640
 --screenHeight = 480
+
+print("screenWidth: " .. screenWidth)
+print("screenHeight: " .. screenHeight)
 
 -- required for non mobile platforms
 MOAISim.openWindow("W.O.B. Prototype", screenWidth, screenHeight)
