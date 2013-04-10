@@ -1,3 +1,7 @@
+require "config"
+require "resource_definitions"
+require "resource_manager"
+
 -- set screen dimensions dynamically based on device
 screenWidth = MOAIEnvironment.horizontalResolution
 screenHeight = MOAIEnvironment.verticalResolution
@@ -81,16 +85,18 @@ viewport:setScale(worldWidth, worldHeight)
 mainMenuLayer = MOAILayer2D.new()
 mainMenuLayer:setViewport(viewport)
 
-backgroundImage = MOAIGfxQuad2D.new()
+menuBackgroundImageDef = {
+	type = RESOURCE_TYPE_IMAGE,
+	fileName = "MainMenuBackground.png",
+	width = worldWidth,
+	height = worldHeight
+}
 
--- MainMenuBackground.png is 2048 x 1152 with a perfect circle in the center (for detecting aspect ratio issues)
-backgroundImage:setTexture("MainMenuBackground.png")
-
--- stretch the background image to cover the entire world dimensions
-backgroundImage:setRect(-(worldWidth/2), -(worldHeight/2), (worldWidth/2), (worldHeight/2))
+ResourceDefinitions:set("menuBackgroundImage", menuBackgroundImageDef)
+menuBackgroundImage = ResourceManager:get("menuBackgroundImage")
 
 backgroundProp = MOAIProp2D.new()
-backgroundProp:setDeck(backgroundImage)
+backgroundProp:setDeck(menuBackgroundImage)
 backgroundProp:setLoc(0, 0)
 
 mainMenuLayer:insertProp(backgroundProp)
