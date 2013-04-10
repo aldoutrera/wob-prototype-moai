@@ -1,6 +1,9 @@
 require "config"
 require "resource_definitions"
 require "resource_manager"
+require "audio_manager"
+
+AudioManager:initialize()
 
 -- set screen dimensions dynamically based on device
 screenWidth = MOAIEnvironment.horizontalResolution
@@ -103,3 +106,6 @@ mainMenuLayer:insertProp(backgroundProp)
 
 renderTable = {mainMenuLayer}
 MOAIRenderMgr.setRenderTable(renderTable)
+
+-- play main menu background music
+AudioManager:play("menuBackgroundMusic")
