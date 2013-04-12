@@ -1,4 +1,5 @@
 require "config"
+require "constants"
 require "resource_definitions"
 require "resource_manager"
 require "audio_manager"
@@ -103,6 +104,15 @@ backgroundProp:setDeck(menuBackgroundImage)
 backgroundProp:setLoc(0, 0)
 
 mainMenuLayer:insertProp(backgroundProp)
+
+titleTextBox = MOAITextBox.new()
+titleTextBox:setFont(ResourceManager:get("titleFont"))
+titleTextBox:setRect(-640, 0, 640, 360)
+titleTextBox:setAlignment(MOAITextBox.CENTER_JUSTIFY, MOAITextBox.CENTER_JUSTIFY)
+titleTextBox:setYFlip(true)
+titleTextBox:setString("W.O.B. Prototype")
+
+mainMenuLayer:insertProp(titleTextBox)
 
 renderTable = {mainMenuLayer}
 MOAIRenderMgr.setRenderTable(renderTable)

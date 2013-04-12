@@ -12,7 +12,6 @@ function ResourceDefinitions:setDefinitions(definitions)
 	end
 end
 
-
 function ResourceDefinitions:get(name)
 	return definitions[name]
 end
@@ -20,3 +19,22 @@ end
 function ResourceDefinitions:remove(name)
 	definitions[name] = nil
 end
+
+titleFontDef = {
+	type = RESOURCE_TYPE_FONT,
+	fileName = "arialbd.ttf",
+	glyphs = chars,
+	fontSize = 48,
+	dpi = 160
+}
+
+menuFontDef = {
+	type = RESOURCE_TYPE_FONT,
+	fileName = "arialbd.ttf",
+	glyphs = chars,
+	fontSize = 24,
+	dpi = 160
+}
+
+ResourceDefinitions:set("titleFont", titleFontDef)
+ResourceDefinitions:set("menuFont", menuFontDef)
