@@ -3,8 +3,11 @@ require "constants"
 require "resource_definitions"
 require "resource_manager"
 require "audio_manager"
+require "input_manager"
+require "main_menu"
 
 AudioManager:initialize()
+InputManager:initialize()
 
 -- set screen dimensions dynamically based on device
 screenWidth = MOAIEnvironment.horizontalResolution
@@ -86,36 +89,4 @@ end
 -- viewport will show world dimensions regardless of device resolution
 viewport:setScale(worldWidth, worldHeight)
 
-mainMenuLayer = MOAILayer2D.new()
-mainMenuLayer:setViewport(viewport)
-
-menuBackgroundImageDef = {
-	type = RESOURCE_TYPE_IMAGE,
-	fileName = "MainMenuBackground.png",
-	width = worldWidth,
-	height = worldHeight
-}
-
-ResourceDefinitions:set("menuBackgroundImage", menuBackgroundImageDef)
-menuBackgroundImage = ResourceManager:get("menuBackgroundImage")
-
-backgroundProp = MOAIProp2D.new()
-backgroundProp:setDeck(menuBackgroundImage)
-backgroundProp:setLoc(0, 0)
-
-mainMenuLayer:insertProp(backgroundProp)
-
-titleTextBox = MOAITextBox.new()
-titleTextBox:setFont(ResourceManager:get("titleFont"))
-titleTextBox:setRect(-640, 0, 640, 360)
-titleTextBox:setAlignment(MOAITextBox.CENTER_JUSTIFY, MOAITextBox.CENTER_JUSTIFY)
-titleTextBox:setYFlip(true)
-titleTextBox:setString("W.O.B. Prototype")
-
-mainMenuLayer:insertProp(titleTextBox)
-
-renderTable = {mainMenuLayer}
-MOAIRenderMgr.setRenderTable(renderTable)
-
--- play main menu background music
-AudioManager:play("menuBackgroundMusic")
+MainMenu:display()
