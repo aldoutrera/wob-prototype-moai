@@ -5,6 +5,7 @@ require "resource_manager"
 require "audio_manager"
 require "input_manager"
 require "main_menu"
+require "game"
 
 AudioManager:initialize()
 InputManager:initialize()

@@ -22,18 +22,18 @@ function MainMenu:display()
 	
 	titleTextBox = MOAITextBox.new()
 	titleTextBox:setFont(ResourceManager:get("titleFont"))
-	titleTextBox:setRect(-640, 0, 640, 360)
+	titleTextBox:setRect(-640, 70, 640, 360)
 	titleTextBox:setAlignment(MOAITextBox.CENTER_JUSTIFY, MOAITextBox.CENTER_JUSTIFY)
 	titleTextBox:setYFlip(true)
 	titleTextBox:setString("W.O.B. Prototype")
 	
 	mainMenuLayer:insertProp(titleTextBox)
 	
-	self:createMenuItem("Account", {-640, 50, 640, 120}, accountTouched)
-	self:createMenuItem("Create Game", {-640, -20, 640, 50}, createGameTouched)
-	self:createMenuItem("Continue Game", {-640, -90, 640, -20}, continueGameTouched)
-	self:createMenuItem("Garage", {-640, -160, 640, -90}, garageTouched)
-	self:createMenuItem("Store", {-640, -230, 640, -160}, storeTouched)
+	self:createMenuItem("Account", {-640, 80, 640, 150}, accountTouched)
+	self:createMenuItem("Create Game", {-640, -10, 640, 60}, createGameTouched)
+	self:createMenuItem("Continue Game", {-640, -100, 640, -30}, continueGameTouched)
+	self:createMenuItem("Garage", {-640, -190, 640, -120}, garageTouched)
+	self:createMenuItem("Store", {-640, -280, 640, -210}, storeTouched)
 	
 	renderTable = {mainMenuLayer}
 	MOAIRenderMgr.setRenderTable(renderTable)
@@ -46,7 +46,9 @@ function MainMenu:accountTouched()
 end
 
 function MainMenu:createGameTouched()
-	print("Create Game Touched")
+	AudioManager:stop("menuBackgroundMusic")
+	gameThread = MOAICoroutine.new()
+	gameThread:run(gameLoop)
 end
 
 function MainMenu:continueGameTouched()
@@ -70,4 +72,8 @@ function MainMenu:createMenuItem(name, rect, callback)
 	menuItemTextBox:setString(name)
 	menuItemTextBox.callback = callback
 	mainMenuLayer:insertProp(menuItemTextBox)
+end
+
+function gameLoop()
+	Game:display()
 end
