@@ -90,4 +90,12 @@ end
 -- viewport will show world dimensions regardless of device resolution
 viewport:setScale(worldWidth, worldHeight)
 
+print("worldWidth: " .. worldWidth)
+print("worldHeight: " .. worldHeight)
+print("viewportWidth: " .. viewportWidth)
+print("viewportHeight: " .. viewportHeight)
+
+worldToViewportScale = worldWidth / viewportWidth
+print("worldToViewportScale: " .. worldToViewportScale)
+
 MainMenu:display()

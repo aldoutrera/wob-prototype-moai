@@ -1,5 +1,7 @@
 module("MainMenu", package.seeall)
 
+displayed = false
+
 function MainMenu:display()
 	mainMenuLayer = MOAILayer2D.new()
 	mainMenuLayer:setViewport(viewport)
@@ -35,6 +37,7 @@ function MainMenu:display()
 	self:createMenuItem("Garage", {-640, -190, 640, -120}, garageTouched)
 	self:createMenuItem("Store", {-640, -280, 640, -210}, storeTouched)
 	
+	displayed = true
 	renderTable = {mainMenuLayer}
 	MOAIRenderMgr.setRenderTable(renderTable)
 	
@@ -47,6 +50,7 @@ end
 
 function MainMenu:createGameTouched()
 	AudioManager:stop("menuBackgroundMusic")
+	displayed = false
 	gameThread = MOAICoroutine.new()
 	gameThread:run(gameLoop)
 end
