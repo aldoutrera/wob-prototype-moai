@@ -18,8 +18,8 @@ function Game:initialize()
     self.currentTurn = 1
     self.currentPlayer = nil
     self.selectedBot = nil
-    self:initializeTeams()    
     self:initializeInterface()
+		self:initializeTeams()
 end
 
 function Game:initializeTeams() 
@@ -40,7 +40,11 @@ function Game:initializeTeams()
   bot:setMaxHitPoints(100)
   bot:setCurrentHitPoints(100)
   bot:setMaxSpeed(10)
+	bot:setModel("blueBot")
+	bot:initialize(self.layer)
+	bot:startAnimation("moveLeft")
   player:addBot(bot)
+	
   local task = Task:new()
   task:setType("mov")
   bot:addTask(task)
@@ -66,7 +70,10 @@ function Game:initializeTeams()
   bot:setLoc(300,300,0)
   bot:setMaxHitPoints(200)
   bot:setCurrentHitPoints(200)
-  bot:setMaxSpeed(20)  
+  bot:setMaxSpeed(20)
+	bot:setModel("redBot")
+	bot:initialize(self.layer)
+	bot:startAnimation("moveDown")
   player:addBot(bot)
 end
 
