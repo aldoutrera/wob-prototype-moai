@@ -78,6 +78,7 @@ function Game:addTeam(team)
 end
 
 function Game:initializeInterface()
+  self.camera = MOAICamera2D.new()
 	self.layer = MOAILayer2D.new()
 	self.layer:setViewport(viewport)
 	self.layer:setCamera(self.camera)
