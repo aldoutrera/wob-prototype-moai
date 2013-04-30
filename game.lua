@@ -13,6 +13,69 @@ function Game:display()
 end
 
 function Game:initialize()
+    self.currentTurn = 1
+    self.currentPlayer = nil
+    self.selectedBot = nil
+    self:initializeTeams()    
+    self:initializeInterface()
+end
+
+function Game:initializeTeams() 
+  self.teams = {}
+  local team = Team:new()
+  team:setName("Cowboys")
+  self:addTeam(team)
+  
+  local player = Player:new()
+  player:setName("Bill")
+  team:addPlayer(player)
+  
+  self.currentPlayer = player
+  
+  local bot = Bot:new()
+  bot:setName("Romo")
+  bot:setLoc(100,100,0)
+  bot:setMaxHitPoints(100)
+  bot:setCurrentHitPoints(100)
+  bot:setMaxSpeed(10)
+  player:addBot(bot)
+  local task = Task:new()
+  task:setType("mov")
+  bot:addTask(task)
+  task = Task:new()
+  task:setType("rot")
+  bot:addTask(task)
+  task = Task:new()
+  task:setType("mov")
+  bot:addTask(task)  
+  
+  self.selectedBot = bot
+  
+  team = Team:new()
+  team:setName("Red Skins")
+  self:addTeam(team)
+  
+  player = Player:new()
+  player:setName("Mike")
+  team:addPlayer(player)
+  
+  local bot = Bot:new()
+  bot:setName("Griffin")
+  bot:setLoc(300,300,0)
+  bot:setMaxHitPoints(200)
+  bot:setCurrentHitPoints(200)
+  bot:setMaxSpeed(20)  
+  player:addBot(bot)
+end
+
+function Game:dumpTeams()
+end
+
+function Game:addTeam(team)
+  table.insert(self.teams,team)
+end
+
+function Game:initializeInterface()
 	self.layer = MOAILayer2D.new()
 	self.layer:setViewport(viewport)
 	MOAIRenderMgr.setRenderTable({self.layer})
@@ -20,6 +83,8 @@ function Game:initialize()
 	ResourceDefinitions:setDefinitions(gameDefinitions)
 	
 	self:initializeTileMap()
+  Hud:initialize();
+  Hud:update();
 end
 
 function Game:initializeTileMap()
@@ -76,4 +141,8 @@ function Game:initializeTileMap()
 	self.tiles.prop:setGrid(self.tiles.grid)
 	self.tiles.prop:setLoc(-1600, -1200)
 	self.layer:insertProp(self.tiles.prop)
+end
+
+function Game:getSelectedBot() 
+  return self.selectedBox
 end

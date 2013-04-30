@@ -5,7 +5,12 @@ require "resource_manager"
 require "audio_manager"
 require "input_manager"
 require "main_menu"
+require "hud"
 require "game"
+require "team"
+require "player"
+require "bot"
+require "task"
 
 AudioManager:initialize()
 InputManager:initialize()

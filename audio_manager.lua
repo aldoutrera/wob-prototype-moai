@@ -1,5 +1,7 @@
 module("AudioManager", package.seeall)
 
+local ENABLE_AUDIO = false
+
 sounds = {}
 
 local audioDefinitions = {
@@ -12,8 +14,10 @@ local audioDefinitions = {
 }
 
 function AudioManager:initialize()
-	ResourceDefinitions:setDefinitions(audioDefinitions)
-	MOAIUntzSystem.initialize()
+  if (ENABLE_AUDIO) then
+    ResourceDefinitions:setDefinitions(audioDefinitions)
+    MOAIUntzSystem:initialize()
+  end
 end
 
 function AudioManager:get(name)
@@ -28,16 +32,20 @@ function AudioManager:get(name)
 end
 
 function AudioManager:play(name, loop)
-	local audio = AudioManager:get(name)
-	
-	if loop ~= nil then
-		audio:setLooping(loop)
-	end
-	
-	audio:play()
+  if (ENABLE_AUDIO) then
+    local audio = AudioManager:get(name)
+    
+    if loop ~= nil then
+      audio:setLooping(loop)
+    end
+    
+    audio:play()
+  end
 end
 
 function AudioManager:stop(name)
-	local audio = AudioManager:get(name)
-	audio:stop()
+  if (ENABLE_AUDIO) then
+    local audio = AudioManager:get(name)
+    audio:stop()
+  end
 end
