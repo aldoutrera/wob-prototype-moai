@@ -14,6 +14,7 @@ local dragging = false
 function InputManager:initialize()
 	if (MOAIInputMgr.device.pointer) then
 		-- app is running on the simulator or other mouse based device
+		MOAIInputMgr.device.pointer:setCallback(updatePosition)
 		MOAIInputMgr.device.mouseLeft:setCallback(handleClick)
 	else
 		-- app is running on mobile device
