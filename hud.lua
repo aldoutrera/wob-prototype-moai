@@ -18,6 +18,19 @@ local BOTINFO_HEIGHT = 25
 local BOTINFO_WIDTH = 150
 local BOTINFO_FONT_SIZE = 15
 local BOTINFO_PADDING = 5
+local MINIMAP_SCALE = .05
+local MINIMAP_PADDING = 10
+
+local hudDefinitions = {
+	blueBot = {
+		type = RESOURCE_TYPE_TILED_IMAGE,
+		fileName = "BlueBot.png",
+		tileMapSize = {4, 11},
+		width = 80, height = 80
+	}
+}
+
+ResourceDefinitions:setDefinitions(hudDefinitions)
 
 function Hud:initialize()
   self.hudViewport = MOAIViewport.new ()
@@ -60,8 +73,64 @@ function Hud:initializeElements()
   self.botHitPointBox = self:newTextBox("hps",20,{x,-(y + BOTINFO_HEIGHT),x + BOTINFO_WIDTH,-y})
   y = y + BOTINFO_HEIGHT + BOTINFO_PADDING
   self.botSpeedBox = self:newTextBox("speed",20,{x,-(y + BOTINFO_HEIGHT),x + BOTINFO_WIDTH,-y}) 
+
+  x = (screenWidth - MINIMAP_PADDING) - (Game.mapWidth*MINIMAP_SCALE)
+  y = -(Game.mapHeight*.25*MINIMAP_SCALE) - (screenHeight - (4*MINIMAP_PADDING))
+  
+  print('map scaled width ' .. Game.mapWidth*MINIMAP_SCALE)
+  print('map scaled height ' .. Game.mapHeight*MINIMAP_SCALE)
+  print('world scaled width ' .. worldWidth * MINIMAP_SCALE)
+  print('world scaled height ' .. worldHeight * MINIMAP_SCALE)
+  
+  local worldWidthScaled = worldWidth * MINIMAP_SCALE
+  local worldHeightScaled = worldHeight * MINIMAP_SCALE
+  
+  self.miniMap = MOAIProp2D.new()
+  self.miniMap:setDeck(Game.tiles.tileset)
+	self.miniMap:setGrid(Game.tiles.grid)
+  self.miniMap:setScl(MINIMAP_SCALE,MINIMAP_SCALE)
+	self.miniMap:setLoc(x, y)
+  self.miniMap.width = Game.mapWidth * MINIMAP_SCALE
+  self.miniMap.height = Game.mapHeight * MINIMAP_SCALE 
+	self.hudLayer:insertProp(self.miniMap)
+  
+  local i = x + (self.miniMap.width / 2) - (worldWidthScaled / 2)
+  local j = y + (self.miniMap.height / 2) + (worldHeightScaled / 2)
+  self.miniMap.viewPortWindowX = i
+  self.miniMap.viewPortWindowY = j
+  
+  print('viewPortX,Y: ' .. i .. ',' .. j)
+  
+  local scriptDeck = MOAIScriptDeck.new()
+  scriptDeck:setRect(0,0,Game.mapWidth*MINIMAP_SCALE,Game.mapHeight*MINIMAP_SCALE)
+  scriptDeck:setDrawCallback(onDraw)
+  local prop = MOAIProp2D.new()
+  prop:setDeck(scriptDeck)
+  self.hudLayer:insertProp(prop)
+  
+  x,y = Game.camera:getLoc()
+  print('camera: ' .. x .. ',' .. y)
+  print(self.miniMap:getLoc())
   
   MOAIDebugLines.setStyle(MOAIDebugLines.TEXT_BOX)
+end
+
+function onDraw(index, xoff, yoff, xflip, yflip) 
+
+  local x,y = Hud.miniMap:getLoc() --lower lefthand corner of minimap
+  
+  MOAIDraw.drawBoxOutline(x,y+Hud.miniMap.height,0,x+Hud.miniMap.width,y,0)
+  
+  x,y = Game.camera:getLoc()
+  x = x*MINIMAP_SCALE
+  y = y*MINIMAP_SCALE
+  
+  MOAIGfxDevice.setPenColor ( 0, 0.5, 0.5, 0.5 ) 
+  local xOffset = worldWidth * MINIMAP_SCALE
+  local yOffset = worldHeight * MINIMAP_SCALE
+  
+  MOAIDraw.drawBoxOutline(x+Hud.miniMap.viewPortWindowX,y+Hud.miniMap.viewPortWindowY,0,
+    x+Hud.miniMap.viewPortWindowX+xOffset,y+Hud.miniMap.viewPortWindowY-yOffset,0)    
 end
 
 function Hud:newTextBox(text, size, rectangle)

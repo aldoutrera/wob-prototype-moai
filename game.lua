@@ -2,6 +2,16 @@ module("Game", package.seeall)
 
 displayed = false
 
+	-- the size of each tile is actually 128x128 if you look at the actual image,
+	-- however, the image is intended to be a high enough resolution to be used
+	-- with an iPad3 which has a 2048x1536 resolution, when scaled down to be used
+	-- in world dimensions which is 1280x720, each tile is going to have a world size
+	-- 80x80, so in world dimensions, the viewport will be 1280x720, which can show
+	-- 16 tiles by 9 tiles at one time, the full map will be 40 tiles by 30 tiles
+local tileSize = 80
+local numberOfRows = 30
+local numberOfColumns = 40
+
 local gameDefinitions = {
 	terrain = {
 		type = RESOURCE_TYPE_TILED_IMAGE,
@@ -103,13 +113,10 @@ end
 function Game:initializeTileMap()
 	local grid = MOAIGrid.new()
 	
-	-- the size of each tile is actually 128x128 if you look at the actual image,
-	-- however, the image is intended to be a high enough resolution to be used
-	-- with an iPad3 which has a 2048x1536 resolution, when scaled down to be used
-	-- in world dimensions which is 1280x720, each tile is going to have a world size
-	-- 80x80, so in world dimensions, the viewport will be 1280x720, which can show
-	-- 16 tiles by 9 tiles at one time, the full map will be 40 tiles by 30 tiles
-	grid:setSize(40, 30, 80, 80)
+  self.mapHeight = numberOfRows * tileSize
+  self.mapWidth = numberOfColumns * tileSize
+  
+  grid:setSize(numberOfColumns, numberOfRows, tileSize, tileSize)
 	
 	-- the map definition will eventually be created by a tile map editor and saved
 	-- as a lua file, or xml file, for the time being we will hard code the definition
@@ -152,7 +159,7 @@ function Game:initializeTileMap()
 	self.tiles.prop = MOAIProp2D.new()
 	self.tiles.prop:setDeck(self.tiles.tileset)
 	self.tiles.prop:setGrid(self.tiles.grid)
-	self.tiles.prop:setLoc(-1600, -1200)
+	self.tiles.prop:setLoc(-(self.mapWidth/2), -(self.mapHeight/2))
 	self.layer:insertProp(self.tiles.prop)
 end
 
