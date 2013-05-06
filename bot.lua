@@ -51,7 +51,7 @@ function Bot:new()
   return obj
 end
 
-function Bot:initialize(layer)
+function Bot:initialize()
 	self.deck = ResourceManager:get(self.model)
 	self.prop = MOAIProp2D.new()
 	self.prop:setDeck(self.deck)
@@ -67,7 +67,19 @@ function Bot:initialize(layer)
 		self:addAnimation(name, def.startFrame, def.frameCount, def.time, def.mode)
 	end
 	
-	layer:insertProp(self.prop)
+	self:initializePhysics()
+end
+
+function Bot:initializePhysics()
+	self.physics = {}
+	self.physics.body = PhysicsManager.world:addBody(MOAIBox2DBody.DYNAMIC)
+	self.physics.body:setTransform(self.x, self.y)
+	
+	-- need to refine this shape in the future, for now it is a simple rect the same size as the bot tile
+	self.physics.fixture = self.physics.body:addRect(-40, -35, 40, 45)
+	
+	-- link the prop to the body
+	self.prop:setAttrLink(1, self.physics.body)
 end
 
 function Bot:setName(name)

@@ -21,18 +21,20 @@ local gameDefinitions = {
 }
 
 function Game:display()
+	PhysicsManager:initialize()
 	self:initialize()
+	self.debugLayer:setBox2DWorld(PhysicsManager.world)
 end
 
 function Game:initialize()
     self.currentTurn = 1
     self.currentPlayer = nil
     self.selectedBot = nil
-    self:initializeInterface()
 		self:initializeTeams()
+    self:initializeInterface()
 end
 
-function Game:initializeTeams() 
+function Game:initializeTeams()
   self.teams = {}
   local team = Team:new()
   team:setName("Cowboys")
@@ -46,13 +48,13 @@ function Game:initializeTeams()
   
   local bot = Bot:new()
   bot:setName("Romo")
-  bot:setLoc(100,100,0)
+  bot:setLoc(0,80,0)
   bot:setMaxHitPoints(100)
   bot:setCurrentHitPoints(100)
   bot:setMaxSpeed(10)
 	bot:setModel("blueBot")
 	bot:initialize(self.layer)
-	bot:startAnimation("moveLeft")
+	bot:startAnimation("moveDown")
   player:addBot(bot)
 	
   local task = Task:new()
@@ -68,7 +70,7 @@ function Game:initializeTeams()
   self.selectedBot = bot
   
   team = Team:new()
-  team:setName("Red Skins")
+  team:setName("Redskins")
   self:addTeam(team)
   
   player = Player:new()
@@ -77,13 +79,13 @@ function Game:initializeTeams()
   
   local bot = Bot:new()
   bot:setName("Griffin")
-  bot:setLoc(300,300,0)
+  bot:setLoc(0,-80,0)
   bot:setMaxHitPoints(200)
   bot:setCurrentHitPoints(200)
   bot:setMaxSpeed(20)
 	bot:setModel("redBot")
 	bot:initialize(self.layer)
-	bot:startAnimation("moveDown")
+	bot:startAnimation("moveUp")
   player:addBot(bot)
 end
 
@@ -96,18 +98,37 @@ end
 
 function Game:initializeInterface()
   self.camera = MOAICamera2D.new()
+	
 	self.layer = MOAILayer2D.new()
 	self.layer:setViewport(viewport)
 	self.layer:setCamera(self.camera)
 	
+	self.debugLayer = MOAILayer2D.new()
+	self.debugLayer:setViewport(viewport)
+	self.debugLayer:setCamera(self.camera)
+	
+	local renderTable = {
+		self.layer,
+		self.debugLayer
+	}
+	
 	displayed = true
-	MOAIRenderMgr.setRenderTable({self.layer})
+	MOAIRenderMgr.setRenderTable(renderTable)
 	
 	ResourceDefinitions:setDefinitions(gameDefinitions)
 	
 	self:initializeTileMap()
   Hud:initialize();
   Hud:update();
+	
+	-- iterate through all the team's player's bots and add them to the map
+	for pos, team in pairs (self.teams) do
+		for pos, player in pairs (team.players) do
+			for pos, bot in pairs (player.bots) do
+				self.layer:insertProp(bot.prop)
+			end
+		end
+	end
 end
 
 function Game:initializeTileMap()
