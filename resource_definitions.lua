@@ -38,3 +38,11 @@ menuFontDef = {
 
 ResourceDefinitions:set("titleFont", titleFontDef)
 ResourceDefinitions:set("menuFont", menuFontDef)
+
+testMapDef = {
+	type = RESOURCE_TYPE_MAP,
+	mapName = "TestMap",
+	fileName = "TestMap.lua"
+}
+
+ResourceDefinitions:set("testMap", testMapDef)

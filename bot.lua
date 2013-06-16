@@ -5,13 +5,13 @@ local botDefinitions = {
 		type = RESOURCE_TYPE_TILED_IMAGE,
 		fileName = "BlueBot.png",
 		tileMapSize = {4, 11},
-		width = 80, height = 80
+		width = 60, height = 60
 	},
 	redBot = {
 		type = RESOURCE_TYPE_TILED_IMAGE,
 		fileName = "RedBot.png",
 		tileMapSize = {4, 11},
-		width = 80, height = 80
+		width = 60, height = 60
 	}
 }
 
@@ -76,10 +76,10 @@ function Bot:initializePhysics()
 	self.physics.body:setTransform(self.x, self.y)
 	
 	-- need to refine this shape in the future, for now it is a simple rect the same size as the bot tile
-	self.physics.fixture = self.physics.body:addRect(-40, -35, 40, 45)
+	self.physics.fixture = self.physics.body:addRect(-30, -25, 30, 35)
 	
 	-- link the prop to the body
-	self.prop:setAttrLink(1, self.physics.body)
+	--self.prop:setAttrLink(1, self.physics.body)
 end
 
 function Bot:setName(name)

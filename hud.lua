@@ -21,14 +21,7 @@ local BOTINFO_PADDING = 5
 local MINIMAP_SCALE = .05
 local MINIMAP_PADDING = 10
 
-local hudDefinitions = {
-	blueBot = {
-		type = RESOURCE_TYPE_TILED_IMAGE,
-		fileName = "BlueBot.png",
-		tileMapSize = {4, 11},
-		width = 80, height = 80
-	}
-}
+local hudDefinitions = {}
 
 ResourceDefinitions:setDefinitions(hudDefinitions)
 
@@ -74,11 +67,11 @@ function Hud:initializeElements()
   y = y + BOTINFO_HEIGHT + BOTINFO_PADDING
   self.botSpeedBox = self:newTextBox("speed",20,{x,-(y + BOTINFO_HEIGHT),x + BOTINFO_WIDTH,-y}) 
 
-  x = (screenWidth - MINIMAP_PADDING) - (Game.mapWidth*MINIMAP_SCALE)
-  y = -(Game.mapHeight*.25*MINIMAP_SCALE) - (screenHeight - (4*MINIMAP_PADDING))
+  x = (screenWidth - MINIMAP_PADDING) - (GameMap.mapWidth*MINIMAP_SCALE)
+  y = -(GameMap.mapHeight*.25*MINIMAP_SCALE) - (screenHeight - (4*MINIMAP_PADDING))
   
-  print('map scaled width ' .. Game.mapWidth*MINIMAP_SCALE)
-  print('map scaled height ' .. Game.mapHeight*MINIMAP_SCALE)
+  print('map scaled width ' .. GameMap.mapWidth*MINIMAP_SCALE)
+  print('map scaled height ' .. GameMap.mapHeight*MINIMAP_SCALE)
   print('world scaled width ' .. worldWidth * MINIMAP_SCALE)
   print('world scaled height ' .. worldHeight * MINIMAP_SCALE)
   
@@ -86,12 +79,12 @@ function Hud:initializeElements()
   local worldHeightScaled = worldHeight * MINIMAP_SCALE
   
   self.miniMap = MOAIProp2D.new()
-  self.miniMap:setDeck(Game.tiles.tileset)
-	self.miniMap:setGrid(Game.tiles.grid)
+  self.miniMap:setDeck(GameMap.tileSet)
+	self.miniMap:setGrid(GameMap.mapGrids["Ground"])
   self.miniMap:setScl(MINIMAP_SCALE,MINIMAP_SCALE)
 	self.miniMap:setLoc(x, y)
-  self.miniMap.width = Game.mapWidth * MINIMAP_SCALE
-  self.miniMap.height = Game.mapHeight * MINIMAP_SCALE 
+  self.miniMap.width = GameMap.mapWidth * MINIMAP_SCALE
+  self.miniMap.height = GameMap.mapHeight * MINIMAP_SCALE
 	self.hudLayer:insertProp(self.miniMap)
   
   local i = x + (self.miniMap.width / 2) - (worldWidthScaled / 2)
@@ -102,7 +95,7 @@ function Hud:initializeElements()
   print('viewPortX,Y: ' .. i .. ',' .. j)
   
   local scriptDeck = MOAIScriptDeck.new()
-  scriptDeck:setRect(0,0,Game.mapWidth*MINIMAP_SCALE,Game.mapHeight*MINIMAP_SCALE)
+  scriptDeck:setRect(0,0,GameMap.mapWidth*MINIMAP_SCALE,GameMap.mapHeight*MINIMAP_SCALE)
   scriptDeck:setDrawCallback(onDraw)
   local prop = MOAIProp2D.new()
   prop:setDeck(scriptDeck)

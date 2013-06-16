@@ -9,8 +9,8 @@ function MainMenu:display()
 	menuBackgroundImageDef = {
 		type = RESOURCE_TYPE_IMAGE,
 		fileName = "MainMenuBackground.png",
-		width = worldWidth,
-		height = worldHeight
+		width = 2048,
+		height = 1152
 	}
 	
 	ResourceDefinitions:set("menuBackgroundImage", menuBackgroundImageDef)

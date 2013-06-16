@@ -3,6 +3,7 @@ module("ResourceManager", package.seeall)
 IMAGE_PATH = "assets/images/"
 FONT_PATH = "assets/fonts/"
 SOUND_PATH = "assets/sounds/"
+MAP_PATH = "assets/maps/"
 
 local cache = {}
 
@@ -34,6 +35,8 @@ function ResourceManager:load(name)
 			resource = self:loadFont(resourceDefinition)
 		elseif (resourceDefinition.type == RESOURCE_TYPE_SOUND) then
 			resource = self:loadSound(resourceDefinition)
+		elseif (resourceDefinition.type == RESOURCE_TYPE_MAP) then
+			resource = self:loadMap(resourceDefinition)
 		end
 		
 		cache[name] = resource
@@ -91,4 +94,9 @@ function ResourceManager:loadSound(definition)
 	sound:setVolume(definition.volume)
 	sound:setLooping(definition.loop)
 	return sound
+end
+
+function ResourceManager:loadMap(definition)
+	local map = dofile(MAP_PATH .. definition.mapName .. "/" .. definition.fileName)
+	return map
 end

@@ -8,6 +8,7 @@ require "physics_manager"
 require "main_menu"
 require "hud"
 require "game"
+require "game_map"
 require "team"
 require "player"
 require "bot"
@@ -66,42 +67,26 @@ print("screenHeight: " .. screenHeight)
 -- required for non mobile platforms
 MOAISim.openWindow("W.O.B. Prototype", screenWidth, screenHeight)
 
--- set world dimensions
-worldWidth = 1280
-worldHeight = 720
-
-viewport = MOAIViewport.new()
-
--- viewport size should be the highest resolution that fits within the screen, that also matches the aspect ratio of the world dimensions
+-- viewport size will be the same as the device screen, no letter boxing
 viewportWidth = screenWidth
 viewportHeight = screenHeight
 
-worldAspectRatio = worldWidth / worldHeight
-screenAspectRatio = screenWidth / screenHeight
+-- viewport scale, or world dimensions, will also be the same as the device screen, at least for the time being
+-- we may need to specify a minimum size for world dimensions to prevent layout issues on low res devices
+worldWidth = screenWidth
+worldHeight = screenHeight
 
-if screenAspectRatio < worldAspectRatio then
-	-- need to letterbox on top and bottom of viewport
-	viewportHeight = viewportWidth / worldAspectRatio
-	offset = (screenHeight - viewportHeight) / 2
-	viewport:setSize(0, offset, viewportWidth, viewportHeight + offset)
-elseif screenAspectRatio > worldAspectRatio then
-	-- need to letterbox on left and right of viewport
-	viewportWidth = viewportHeight * worldAspectRatio
-	offset = (screenWidth - viewportWidth) / 2
-	viewport:setSize(offset, 0, viewportWidth + offset, viewportHeight)
-else
-	viewport:setSize(viewportWidth, viewportHeight)
-end
-
--- viewport will show world dimensions regardless of device resolution
+viewport = MOAIViewport.new()
+viewport:setSize(viewportWidth, viewportHeight)
 viewport:setScale(worldWidth, worldHeight)
+worldAspectRatio = worldWidth / worldHeight
+worldToViewportScale = worldWidth / viewportWidth
 
-print("worldWidth: " .. worldWidth)
-print("worldHeight: " .. worldHeight)
 print("viewportWidth: " .. viewportWidth)
 print("viewportHeight: " .. viewportHeight)
-
-worldToViewportScale = worldWidth / viewportWidth
+print("worldWidth: " .. worldWidth)
+print("worldHeight: " .. worldHeight)
+print("worldAspectRatio: " .. worldAspectRatio)
 print("worldToViewportScale: " .. worldToViewportScale)
 
 MainMenu:display()
