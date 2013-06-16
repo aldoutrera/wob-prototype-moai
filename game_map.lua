@@ -7,7 +7,7 @@ function GameMap:initialize(mapName)
 	self.mapHeight = self.map.height * self.map.tileheight
 	
 	self.tileSet = MOAITileDeck2D.new()
-	self.tileSet:setTexture(ResourceManager.MAP_PATH .. mapName .. "/" .. self.map.tilesets[1].image)
+	self.tileSet:setTexture(ResourceManager.MAP_PATH .. self.map.properties["Name"] .. "/" .. self.map.tilesets[1].image)
 	self.tileSet:setSize(self.map.tilesets[1].imagewidth / self.map.tilesets[1].tilewidth, self.map.tilesets[1].imageheight / self.map.tilesets[1].tileheight)
 	
 	self.mapGrids = {}
